@@ -56,12 +56,12 @@ def plot_filer_data(dataset):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(fig, use_container_width=True, config=config)
         st.plotly_chart(fig_w, use_container_width=True, config=config)
+        st.plotly_chart(fig, use_container_width=True, config=config)
 
     with col2:
-        st.plotly_chart(pie, use_container_width=True, config=config)
         st.plotly_chart(pie_w, use_container_width=True, config=config)
+        st.plotly_chart(pie, use_container_width=True, config=config)
 
 
 def filter_data(data, selectors):
