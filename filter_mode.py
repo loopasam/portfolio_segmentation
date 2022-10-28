@@ -3,29 +3,27 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
-def show_filter_selectors(data):
+def show_filter_selectors(data, selected):
+
     selectors = {}
+
     excluded = ['Company']
     for feature in data:
-        # st.write(f'{feature}: {data[feature].dtype}')
         if feature not in excluded:
             feature_type = data[feature].dtype
             if feature_type == 'object':
-                values = data[feature].unique()
-                selector = st.sidebar.multiselect(feature, values, values)
+                values = list(data[feature].unique())
+                if feature in selected:
+                    selected_vals = selected[feature]
+                else:
+                    selected_vals = values
+                selector = st.sidebar.multiselect(feature, values, selected_vals)
                 selectors[feature] = selector
             elif feature_type == 'int64' or feature_type == 'float64':
                 feature_max = max(data[feature])
                 feature_min = min(data[feature])
                 selector = st.sidebar.slider(feature, feature_min, feature_max, (feature_min, feature_max))
                 selectors[feature] = selector
-            # elif feature_type == 'datetime64[ns]':
-            #     # feature_max = pd.to_datetime(max(data[feature]))
-            #     feature_max = max(data[feature]).to_pydatetime()
-            #     # feature_min = pd.to_datetime(min(data[feature]))
-            #     feature_min = min(data[feature]).to_pydatetime()
-            #     selector = st.sidebar.slider(feature, feature_min, feature_max, (feature_min, feature_max))
-            #     selectors[feature] = selector
     return selectors
 
 
@@ -47,20 +45,23 @@ def get_pie_chart(dataset, selection, non_selection, title):
 
 
 def plot_filer_data(dataset):
+
     fig = get_bar_chart(dataset, 'n_selection', 'n_non_selection', 'by number of companies')
     fig_w = get_bar_chart(dataset, 'w_selection', 'w_non_selection', 'by portfolio weight')
 
     pie = get_pie_chart(dataset, 'n_selection', 'n_non_selection', 'by number of companies')
     pie_w = get_pie_chart(dataset, 'w_selection', 'w_non_selection', 'by portfolio weight')
 
+    config = {'displayModeBar': False}
+
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(fig, use_container_width=True)
-        st.plotly_chart(fig_w, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=config)
+        st.plotly_chart(fig_w, use_container_width=True, config=config)
 
     with col2:
-        st.plotly_chart(pie, use_container_width=True)
-        st.plotly_chart(pie_w, use_container_width=True)
+        st.plotly_chart(pie, use_container_width=True, config=config)
+        st.plotly_chart(pie_w, use_container_width=True, config=config)
 
 
 def filter_data(data, selectors):
@@ -91,10 +92,29 @@ def get_bg(data):
 
 def filter_mode(data):
     # st.title('Portfolio Exposure')
-    selectors = show_filter_selectors(data)
 
     # Compute the background values
     bg, w_bg = get_bg(data)
+
+    # Compute the list of reset values
+    reset = {}
+    excluded = ['Company']
+    for feature in data:
+        if feature not in excluded:
+            feature_type = data[feature].dtype
+            if feature_type == 'object':
+                values = list(data[feature].unique())
+                reset[feature] = values
+
+    # Preset mode in place
+    preset = st.sidebar.selectbox('Preset', ['Default', 'Selection'])
+    if preset == 'Selection':
+        selected = {'Orphan diseases': ['Yes'], 'Therapeutic area': ["CNS", "Autoimmune"]}
+    else:
+        selected = reset
+
+    # Show the filters
+    selectors = show_filter_selectors(data, selected)
 
     # Filter to the selected level
     subset = filter_data(data, selectors)

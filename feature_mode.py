@@ -27,12 +27,14 @@ def plot_feature_data(groups_n, groups_weight):
     pie_n = get_pie_chart(groups_n, 'by number of companies')
     pie_weight = get_pie_chart(groups_weight, 'by portfolio weight')
 
+    config = {'displayModeBar': False}
+
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(pie_weight, use_container_width=True)
+        st.plotly_chart(pie_weight, use_container_width=True, config=config)
 
     with col2:
-        st.plotly_chart(pie_n, use_container_width=True)
+        st.plotly_chart(pie_n, use_container_width=True, config=config)
 
 
 def feature_mode(data):

@@ -24,7 +24,6 @@ def main():
     st.set_page_config(page_title="BION Portfolio", layout="wide", initial_sidebar_state="expanded")
 
     data, weight = read_data()
-    # st.write(weight)
 
     mode = st.sidebar.selectbox('Mode', ['Feature', 'Filter'])
     st.sidebar.write('<hr>', unsafe_allow_html=True)
