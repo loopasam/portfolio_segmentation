@@ -52,7 +52,8 @@ def plot_filer_data(dataset):
     pie = get_pie_chart(dataset, 'n_selection', 'n_non_selection', 'by number of companies')
     pie_w = get_pie_chart(dataset, 'w_selection', 'w_non_selection', 'by portfolio weight')
 
-    config = {'displayModeBar': False}
+    # config = {'displayModeBar': False}
+    config = {'modeBarButtonsToRemove': ['zoom', 'pan', 'select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'lasso2d'], 'displaylogo': False}
 
     col1, col2 = st.columns(2)
     with col1:

@@ -27,7 +27,7 @@ def plot_feature_data(groups_n, groups_weight):
     pie_n = get_pie_chart(groups_n, 'by number of companies')
     pie_weight = get_pie_chart(groups_weight, 'by portfolio weight')
 
-    config = {'displayModeBar': False}
+    config = {'modeBarButtonsToRemove': ['zoom', 'pan', 'select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'lasso2d'], 'displaylogo': False}
 
     col1, col2 = st.columns(2)
     with col1:
